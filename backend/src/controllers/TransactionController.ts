@@ -17,10 +17,21 @@ interface TransactionParams {
   id: string;
 }
 
+declare module 'fastify' {
+  interface FastifyRequest {
+    user?: { id: string };
+  }
+}
+
 class TransactionController {
   async create(req: FastifyRequest<{ Body: TransactionRequestBody }>, rep: FastifyReply) {
     const { amount, type, date } = req.body;
-    const userId = req.user.id;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      rep.status(401).send({ error: 'Unauthorized' });
+      return;
+    }
 
     const transactionService = new TransactionService();
 
@@ -37,7 +48,12 @@ class TransactionController {
   }
 
   async list(req: FastifyRequest, rep: FastifyReply) {
-    const userId = req.user.id;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      rep.status(401).send({ error: 'Unauthorized' });
+      return;
+    }
 
     const transactionService = new TransactionService();
 
@@ -56,7 +72,12 @@ class TransactionController {
   async update(req: FastifyRequest<{ Params: TransactionParams; Body: UpdateTransactionRequestBody }>, rep: FastifyReply) {
     const { id } = req.params;
     const { amount, type, date } = req.body;
-    const userId = req.user.id;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      rep.status(401).send({ error: 'Unauthorized' });
+      return;
+    }
 
     const transactionService = new TransactionService();
 
@@ -78,7 +99,12 @@ class TransactionController {
 
   async delete(req: FastifyRequest<{ Params: TransactionParams }>, rep: FastifyReply) {
     const { id } = req.params;
-    const userId = req.user.id;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      rep.status(401).send({ error: 'Unauthorized' });
+      return;
+    }
 
     const transactionService = new TransactionService();
 

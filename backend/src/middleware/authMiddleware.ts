@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import jwt from 'jsonwebtoken';
 
 interface UserPayload {
@@ -7,7 +7,7 @@ interface UserPayload {
 
 declare module 'fastify' {
   interface FastifyRequest {
-    user: UserPayload;
+    user?: UserPayload;
   }
 }
 
