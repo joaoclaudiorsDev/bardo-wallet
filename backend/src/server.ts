@@ -10,7 +10,13 @@ dotenv.config();
 const app = Fastify({ logger: true });
 
 const start = async () => {
-  await app.register(cors);
+  await app.register(cors, {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  });
+
   await app.register(userRoutes);
   await app.register(loginRoutes);
   await app.register(transactionRoutes);
